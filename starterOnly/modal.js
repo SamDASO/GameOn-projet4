@@ -32,21 +32,21 @@ function closeModal() {
 // Validation when the user submit the form
 function validate() {
 
-  //If the first name is at least 2 caracters
+  //If the first name is not at least 2 caracters
   let firstInput = document.getElementById('first');
 
   if (firstInput.value.trim().length < 2) {
     return false;
   }
 
-  //If the last name is at least 2 caracters
+  //If the last name is not at least 2 caracters
   let lastInput = document.getElementById('last');
 
   if (lastInput.value.trim().length < 2) {
     return false;
   }
 
-  //If the email is valid
+  //If the email is not valid
   let emailInput = document.getElementById('email');
   let validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
