@@ -29,3 +29,19 @@ function closeModal() {
   modalbg.style.display = "none";
 }
 
+// Validation when the user submit the form
+function validate() {
+  let firstInput = document.getElementById('first');
+  let lastInput = document.getElementById('last');
+
+  if (firstInput.value.trim().length < 2) {
+    return false;
+  }
+
+  if (lastInput.value.trim().length < 2) {
+    return false;
+  }
+
+  return true;
+
+}
