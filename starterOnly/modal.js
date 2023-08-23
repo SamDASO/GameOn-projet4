@@ -30,48 +30,76 @@ function closeModal() {
 }
 
 // Validation when the user submit the form
-function validate() {
 
-  //Stored value - prevent deleting the users value if the form is not valid when sbmit
+const submitForm = document.querySelectorAll(".btn-submit");
+submitForm.forEach((btn) => btn.addEventListener("click", validate));
+let formValid = 0;
+
+
+//If the first name is not at least 2 caracters
+
+function firstValidation() {
   let storedfirst = firstInput.value;
-  let storedlast = lastInput.value;
-  let storedemail = emailInput.value;
-  let storedcompetition = competitionInput.value;
-
-  //If the first name is not at least 2 caracters
   let firstInput = document.getElementById('first');
 
-
   if (firstInput.value.trim().length < 2) {
+    // mettre message d'erreur
     firstInput.value = storedfirst;
-    return false;
+    formValid++;
   }
+}
 
-  //If the last name is not at least 2 caracters
+
+//If the last name is not at least 2 caracters
+
+function lastValidation() {
+  let storedlast = lastInput.value;
   let lastInput = document.getElementById('last');
 
   if (lastInput.value.trim().length < 2) {
+    // mettre message d'erreur
     lastInput.value = storedlast;
-    return false;
+    formValid++;
   }
+}
 
-  //If the email is not valid
+
+//If the email is not valid
+
+function emailValidation() {
+  let storedemail = emailInput.value;
   let emailInput = document.getElementById('email');
   let validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
   if (!validRegex.test(emailInput.value)) {
+    // mettre message d'erreur
     emailInput.value = storedemail;
-    return false;
+    formValid++;
   }
+}
 
-  //If the quantity in the number of competition field is not a number
+
+//If the quantity in the number of competition field is not a number
+
+function competitionValidation() {
+  let storedcompetition = competitionInput.value;
   let competitionInput = document.getElementById('quantity');
 
   if (isNan(competitionInput.value)) {
+    // mettre message d'erreur
     competitionInput.value = storedcompetition;
+    formValid++;
+  }
+}
+
+function validate() {
+  let functionValidation = firstValidation() + lastValidation() + emailValidation() + competitionValidation();
+
+  if (functionValidation == 0) {
+    return true;
+
+  } else {
     return false;
   }
-
-  return true;
-
 }
+
