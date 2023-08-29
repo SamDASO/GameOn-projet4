@@ -33,33 +33,62 @@ function closeModal() {
 
 const submitForm = document.querySelectorAll(".btn-submit");
 submitForm.forEach((btn) => btn.addEventListener("click", validate));
-let formValid = 0;
 
+function validate() {
 
-//If the first name is not at least 2 caracters
-
-function firstValidation() {
+  // stored inputs
   let storedfirst = firstInput.value;
-  let firstInput = document.getElementById('first');
+  let storedlast = lastInput.value;
+  let storedemail = emailInput.value;
+  let storedcompetition = competitionInput.value;
+  let formValid = 0;
 
-  if (firstInput.value.trim().length < 2) {
-    // mettre message d'erreur
+  formValid = firstValidation() + lastValidation() + emailValidation() + competitionValidation();
+
+  if (formValid > 0) {
+    lastInput.value = storedlast;
     firstInput.value = storedfirst;
-    formValid++;
+    emailInput.value = storedemail;
+    competitionInput.value = storedcompetition;
+    return false;
+
+  } else {
+    return true;
   }
 }
 
+// Validation inputs
+//If the first name is not at least 2 caracters
+
+function firstValidation() {
+  let firstInput = document.getElementById('first');
+
+  if (firstInput.value.trim().length < 2) {
+    firstInput.parentElement.setAttribute('data-error-visible', 'true');
+    firstInput.parentElement.setAttribute('data-error', "Le prénom doit contenir au moins 2 caractères");
+    return 1;
+
+  } else {
+    firstInput.parentElement.setAttribute('data-error-visible', 'false');
+    firstInput.parentElement.removeAttribute('data-error');
+    return 0;
+  }
+}
 
 //If the last name is not at least 2 caracters
 
 function lastValidation() {
-  let storedlast = lastInput.value;
   let lastInput = document.getElementById('last');
 
   if (lastInput.value.trim().length < 2) {
-    // mettre message d'erreur
-    lastInput.value = storedlast;
-    formValid++;
+    lastInput.parentElement.setAttribute('data-error-visible', 'true');
+    lastInput.parentElement.setAttribute('data-error', "Le nom doit contenir au moins 2 caractères");
+    return 1;
+
+  } else {
+    lastInput.parentElement.setAttribute('data-error-visible', 'false');
+    lastInput.parentElement.removeAttribute('data-error');
+    return 0;
   }
 }
 
@@ -67,14 +96,18 @@ function lastValidation() {
 //If the email is not valid
 
 function emailValidation() {
-  let storedemail = emailInput.value;
   let emailInput = document.getElementById('email');
   let validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
   if (!validRegex.test(emailInput.value)) {
-    // mettre message d'erreur
-    emailInput.value = storedemail;
-    formValid++;
+    emailInput.parentElement.setAttribute('data-error-visible', 'true');
+    emailInput.parentElement.setAttribute('data-error', "L'e-mail entré n'est pas valide.");
+    return 1;
+
+  } else {
+    emailInput.parentElement.setAttribute('data-error-visible', 'false');
+    emailInput.parentElement.removeAttribute('data-error');
+    return 0;
   }
 }
 
@@ -82,24 +115,20 @@ function emailValidation() {
 //If the quantity in the number of competition field is not a number
 
 function competitionValidation() {
-  let storedcompetition = competitionInput.value;
   let competitionInput = document.getElementById('quantity');
 
-  if (isNan(competitionInput.value)) {
-    // mettre message d'erreur
-    competitionInput.value = storedcompetition;
-    formValid++;
-  }
-}
-
-function validate() {
-  let functionValidation = firstValidation() + lastValidation() + emailValidation() + competitionValidation();
-
-  if (functionValidation == 0) {
-    return true;
+  if (isNaN(competitionInput.value)) {
+    competitionInput.parentElement.setAttribute('data-error-visible', 'true');
+    competitionInput.parentElement.setAttribute('data-error', "Ce champ ne peut contenir que des chiffres.");
+    return 1;
 
   } else {
-    return false;
+    competitionInput.parentElement.setAttribute('data-error-visible', 'false');
+    competitionInput.parentElement.removeAttribute('data-error');
+
+    return 0;
   }
 }
+
+
 
