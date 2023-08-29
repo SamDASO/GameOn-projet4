@@ -34,7 +34,8 @@ function closeModal() {
 const submitForm = document.querySelectorAll(".btn-submit");
 submitForm.forEach((btn) => btn.addEventListener("click", validate));
 
-function validate() {
+function validate(submit) {
+  submit.preventDefault();
 
   // stored inputs
   let storedfirst = firstInput.value;
@@ -124,7 +125,7 @@ function competitionValidation() {
 
   } else {
     competitionInput.parentElement.setAttribute('data-error-visible', 'false');
-    competitionInput.parentElement.removeAttribute('data-error');
+    removeAttribute('data-error');
 
     return 0;
   }
