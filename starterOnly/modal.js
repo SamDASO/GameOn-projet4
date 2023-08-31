@@ -13,6 +13,11 @@ const modalBtn = document.querySelectorAll(".modal-btn");
 const formData = document.querySelectorAll(".formData");
 const modalClose = document.querySelectorAll(".close");
 
+let firstInput = document.getElementById('first');
+let lastInput = document.getElementById('last');
+let emailInput = document.getElementById('email');
+let competitionInput = document.getElementById('quantity');
+
 // launch modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
 
@@ -42,6 +47,8 @@ function validate(submit) {
   let storedlast = lastInput.value;
   let storedemail = emailInput.value;
   let storedcompetition = competitionInput.value;
+
+
   let formValid = 0;
 
   formValid = firstValidation() + lastValidation() + emailValidation() + competitionValidation();
@@ -62,7 +69,6 @@ function validate(submit) {
 //If the first name is not at least 2 caracters
 
 function firstValidation() {
-  let firstInput = document.getElementById('first');
 
   if (firstInput.value.trim().length < 2) {
     firstInput.parentElement.setAttribute('data-error-visible', 'true');
@@ -79,7 +85,6 @@ function firstValidation() {
 //If the last name is not at least 2 caracters
 
 function lastValidation() {
-  let lastInput = document.getElementById('last');
 
   if (lastInput.value.trim().length < 2) {
     lastInput.parentElement.setAttribute('data-error-visible', 'true');
@@ -97,7 +102,6 @@ function lastValidation() {
 //If the email is not valid
 
 function emailValidation() {
-  let emailInput = document.getElementById('email');
   let validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
   if (!validRegex.test(emailInput.value)) {
@@ -116,7 +120,6 @@ function emailValidation() {
 //If the quantity in the number of competition field is not a number
 
 function competitionValidation() {
-  let competitionInput = document.getElementById('quantity');
 
   if (isNaN(competitionInput.value)) {
     competitionInput.parentElement.setAttribute('data-error-visible', 'true');
@@ -125,7 +128,7 @@ function competitionValidation() {
 
   } else {
     competitionInput.parentElement.setAttribute('data-error-visible', 'false');
-    removeAttribute('data-error');
+    competitionInput.parentElement.removeAttribute('data-error');
 
     return 0;
   }
