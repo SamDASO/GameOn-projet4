@@ -12,6 +12,8 @@ const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const formData = document.querySelectorAll(".formData");
 const modalClose = document.querySelectorAll(".close");
+const modalValid = document.getElementById("modal-valid");
+const form = document.getElementById("form-inscription");
 
 let firstInput = document.getElementById('first');
 let lastInput = document.getElementById('last');
@@ -36,6 +38,7 @@ modalClose.forEach((close) => close.addEventListener("click", closeModal));
 function closeModal() {
   modalbg.style.display = "none";
 }
+
 
 // Validation when the user submit the form
 
@@ -67,6 +70,9 @@ function validate(submit) {
     return false;
 
   } else {
+    form.style.display = "none";
+    modalValid.style.display = "block";
+    modalClose.forEach((close) => close.addEventListener("click", closeModal));
     return true;
   }
 }
