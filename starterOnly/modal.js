@@ -1,72 +1,77 @@
 function editNav() {
-  var x = document.getElementById("myTopnav");
-  if (x.className === "topnav") {
-    x.className += " responsive";
+  const nav = document.getElementById("myTopnav");
+  if (nav.className === "topnav") {
+    nav.className += " responsive";
   } else {
-    x.className = "topnav";
+    nav.className = "topnav";
   }
 }
 
-// DOM Elements
+//------------ DOM Elements ------------//
+
+// General
+
 const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
-const formData = document.querySelectorAll(".formData");
 const modalClose = document.querySelectorAll(".close");
 const modalValid = document.getElementById("modal-valid");
 const form = document.getElementById("form-inscription");
 
-let firstInput = document.getElementById('first');
-let lastInput = document.getElementById('last');
-let emailInput = document.getElementById('email');
-let dateInput = document.getElementById('birthdate');
-let competitionInput = document.getElementById('quantity');
-let locationInput = document.querySelectorAll('input[name="location"]');
-let termsInput = document.getElementById("checkbox1");
+// Form
+
+const firstInput = document.getElementById('first');
+const firstInputParent = document.getElementById('first-parent');
+const lastInput = document.getElementById('last');
+const lastInputParent = document.getElementById('last-parent');
+const emailInput = document.getElementById('email');
+const emailInputParent = document.getElementById('email-parent');
+const dateInput = document.getElementById('birthdate');
+const dateInputParent = document.getElementById('birthdate-parent');
+const competitionInput = document.getElementById('quantity');
+const competitionInputParent = document.getElementById('quantity-parent');
+const locationInput = document.querySelectorAll('input[name="location"]');
+const locationInputParent = document.getElementById('locationData');
+const termsInput = document.getElementById("checkbox1");
+const termsInputParent = document.getElementById("checkbox-parent");
+const submit = document.querySelectorAll(".btn-submit");
+
+//------------ ADD EVENT LISTENER ------------//
 
 // launch modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
 
-// launch modal form
-function launchModal() {
-  modalbg.style.display = "block";
-}
+// Submitting the form
+submit.forEach((btn) => btn.addEventListener("click", submitForm));
 
 // Close modal event
 modalClose.forEach((close) => close.addEventListener("click", closeModal));
 
+
+//------------ MODAL FUNCTIONS ------------//
+
+// launch modal form
+function launchModal() {
+  modalbg.style.display = "block";
+};
+
 // Close modal form
 function closeModal() {
   modalbg.style.display = "none";
-}
+};
 
+//------------ FORM VALIDATION ------------//
 
-// Validation when the user submit the form
+// Submit function
 
-const submitForm = document.querySelectorAll(".btn-submit");
-submitForm.forEach((btn) => btn.addEventListener("click", validate));
+function submitForm(event) {
+  event.preventDefault();
 
-function validate(submit) {
-  submit.preventDefault();
+  let isFormValid = 0;
 
-  // stored inputs
-  let storedfirst = firstInput.value;
-  let storedlast = lastInput.value;
-  let storedemail = emailInput.value;
-  let storeddate = dateInput.value;
-  let storedcompetition = competitionInput.value;
-  let storedlocation = locationInput.value;
+  isFormValid = lenghtInputValidation(firstInput, firstInputParent) + lenghtInputValidation(lastInput, lastInputParent) + emailValidation(emailInput, emailInputParent) + dateValidation(dateInput, dateInputParent) + numberValidation(competitionInput, competitionInputParent) + checkboxValidation(locationInput, locationInputParent) + btnValidation(termsInput, termsInputParent);
 
-  let formValid = 0;
+  if (isFormValid > 0) {
 
-  formValid = firstValidation() + lastValidation() + emailValidation() + dateValidation() + competitionValidation() + locationValidation() + termsValidation();
-
-  if (formValid > 0) {
-    lastInput.value = storedlast;
-    firstInput.value = storedfirst;
-    emailInput.value = storedemail;
-    competitionInput.value = storedcompetition;
-    dateInput.value = storeddate;
-    locationInput.value = storedlocation;
     return false;
 
   } else {
@@ -77,124 +82,164 @@ function validate(submit) {
   }
 }
 
-// Validation inputs
-//If the first name is not at least 2 caracters
+//---- Errors display or hide ----//
 
-function firstValidation() {
 
-  if (firstInput.value.trim().length < 2) {
-    firstInput.parentElement.setAttribute('data-error-visible', 'true');
-    firstInput.parentElement.setAttribute('data-error', "Le prénom doit contenir au moins 2 caractères");
+/**
+ * This function display an error message for each input field of the form.
+ * @param {string} displayEl - parent element of the input and where the message needs to be display
+ * @param {string} errorMessage - The error message
+ */
+function errorDisplay(displayEl, errorMessage) {
+  displayEl.setAttribute('data-error-visible', 'true');
+  displayEl.setAttribute('data-error', errorMessage);
+};
+
+/**
+ * This function removes the error message applied after the errorDisplay() function.
+ * @param {string} displayEl - parent element of the input and where the message needs to be display
+ */
+function hideError(displayEl) {
+  displayEl.setAttribute('data-error-visible', 'false');
+  displayEl.removeAttribute('data-error');
+};
+
+//---- Validation inputs ----//
+
+/**
+ * checks if the input is longer than 2 caracters - used for a form
+ * @param {string} name - Replace it with the DOM element which we need to verify the condition
+ * @param {string} nameParent - Replace it with the DOM element which is the parent of the previous parameter
+ * @returns 1 if the input is empty or smaller than 2 caracters, and 0 if it's longer than 2 caracters
+ */
+function lenghtInputValidation(name, nameParent) {
+
+  if (name.value.trim().length < 2) {
+    errorDisplay(nameParent, "Ce champ doit contenir au moins 2 caractères");
     return 1;
 
   } else {
-    firstInput.parentElement.setAttribute('data-error-visible', 'false');
-    firstInput.parentElement.removeAttribute('data-error');
-    return 0;
-  }
-}
-
-//If the last name is not at least 2 caracters
-
-function lastValidation() {
-
-  if (lastInput.value.trim().length < 2) {
-    lastInput.parentElement.setAttribute('data-error-visible', 'true');
-    lastInput.parentElement.setAttribute('data-error', "Le nom doit contenir au moins 2 caractères");
-    return 1;
-
-  } else {
-    lastInput.parentElement.setAttribute('data-error-visible', 'false');
-    lastInput.parentElement.removeAttribute('data-error');
-    return 0;
-  }
-}
-
-
-//If the email is not valid
-
-function emailValidation() {
-  let validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
-  if (!validRegex.test(emailInput.value)) {
-    emailInput.parentElement.setAttribute('data-error-visible', 'true');
-    emailInput.parentElement.setAttribute('data-error', "L'e-mail entré n'est pas valide");
-    return 1;
-
-  } else {
-    emailInput.parentElement.setAttribute('data-error-visible', 'false');
-    emailInput.parentElement.removeAttribute('data-error');
-    return 0;
-  }
-}
-
-//If the birthdate is not registred
-
-function dateValidation() {
-
-  if (!dateInput.value) {
-    dateInput.parentElement.setAttribute('data-error-visible', 'true');
-    dateInput.parentElement.setAttribute('data-error', "Vous devez entrer votre date de naissance");
-    return 1;
-
-  } else {
-    dateInput.parentElement.setAttribute('data-error-visible', 'false');
-    dateInput.parentElement.removeAttribute('data-error');
+    hideError(nameParent);
     return 0;
   }
 }
 
 
-//If the quantity in the number of competition field is not a number
+/**
+ * checks if the email input is valid - used for a form
+ * @param {string} email  - Replace it with the DOM element which we need to verify the condition. This needs to be an email input
+ * @param {string} emailParent  - Replace it with the DOM element which is the parent of the previous parameter
+ * @returns 1 if the email input is not correct and 0 if it's correct.
+ */
 
-function competitionValidation() {
+function emailValidation(email, emailParent) {
+  const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-  if (isNaN(competitionInput.value) || (!competitionInput.value)) {
-    competitionInput.parentElement.setAttribute('data-error-visible', 'true');
-    competitionInput.parentElement.setAttribute('data-error', "Ce champ est obligatoire et ne peut contenir que des chiffres");
+  if (!validRegex.test(email.value)) {
+    errorDisplay(emailParent, "L'e-mail entré n'est pas valide");
     return 1;
 
   } else {
-    competitionInput.parentElement.setAttribute('data-error-visible', 'false');
-    competitionInput.parentElement.removeAttribute('data-error');
-
+    hideError(emailParent);
     return 0;
   }
 }
 
-//If the location is set
+/**
+ * checks if the date input is valid and not empty - used for a form
+ * @param {string} date - Replace it with the DOM element which we need to verify the condition.
+ * @param {string} dateParent - Replace it with the DOM element which is the parent of the previous parameter
+ * @returns 1 if it's not valid and 0 if everything is correct
+ */
 
-function locationValidation() {
+function dateValidation(date, dateParent) {
+  if (!date.value || !Date.parse(date.value) || !isDateValid(date)) {
+    errorDisplay(dateParent, "Vous devez entrer votre date de naissance correctement");
+    return 1;
 
-  let isChecked = Array.from(locationInput).some(input => input.checked);
-  let group = document.querySelector('.locationData');
+  } else {
+    hideError(dateParent);
+    return 0;
+  }
+}
+
+//---- Function comparing current date to the input----//
+
+/**
+ * Function for inputs where the date cannot be superior of the current date of submitting
+ * @param {string} inputDate - The element wich we want to compare the value with the current date
+ * @returns false if the input is superior of the current date or true if not
+ */
+function isDateValid(inputDate) {
+  const setDate = new Date(inputDate.value);
+  const currentDate = new Date();
+
+  if (setDate > currentDate) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+
+/**
+ * checks if the input is a valid number and is not empty. Valid number means it's not a negative or an exponent number - used for a form
+ * @param {string} numberValid - Replace it with the DOM element which we need to verify the condition.
+ * @param {string} numberValidParent - Replace it with the DOM element which is the parent of the previous parameter
+ * @returns 1 if it's not a valid number and 0 if the number is correct.
+ */
+
+function numberValidation(numberValid, numberValidParent) {
+  //Verify if the pattern matches for a non-negative number and without exponent notation. Also verify if the input is a number.
+  const regex = /^[+]?\d+(\.\d+)?$/;
+
+
+  if (!numberValid.value || !regex.test(numberValid.value)) {
+    errorDisplay(numberValidParent, "Ce champ est obligatoire et ne peut contenir que des chiffres");
+    return 1;
+
+  } else {
+    hideError(numberValidParent);
+    return 0;
+  }
+}
+
+/**
+ * Used for required checkbox. This function checks if one option is selected - Used for a the location checkbox of the form
+ * @param {string} checkInput - The DOM ELEMENT reffering to the name of the radios buttons
+ * @param {string} checkInputParent - The DOM ELEMENT reffering to the parent of the name of the radios buttons
+ * @returns 0 if one option is selected and returns 1 if not.
+ */
+
+function checkboxValidation(checkInput, checkInputParent) {
+
+  let isChecked = Array.from(checkInput).some(input => input.checked);
 
   if (!isChecked) {
-    group.setAttribute('data-error-visible', 'true');
-    group.setAttribute('data-error', "Vous devez choisir un tournoi auquel vous souhaitez participer");
+    errorDisplay(checkInputParent, "Vous devez choisir une des options ci-dessus");
     return 1;
 
   } else {
-    group.setAttribute('data-error-visible', 'false');
-    group.removeAttribute('data-error');
-
+    hideError(checkInputParent);
     return 0;
   }
 }
 
-//If the terms of use are not accept
+/**
+ * Verify in the form modal that the terms of use are checked before submitting the form.
+ * @param {string} btn - The DOM ELEMENT reffering to the name of the checkbox button
+ * @param {string} btnParent - The DOM ELEMENT reffering to the parent of the name of the checkbox button
+ * @returns 0 if it's the case and 1 if not.
+ */
 
-function termsValidation() {
+function btnValidation(btn, btnParent) {
 
-  if (!termsInput.checked) {
-    termsInput.parentElement.setAttribute('data-error-visible', 'true');
-    termsInput.parentElement.setAttribute('data-error', "Vous devez avoir lu et accepté les conditions d'utilisation pour pouvoir vous inscrire");
+  if (!btn.checked) {
+    errorDisplay(btnParent, "Vous devez avoir lu et accepté les conditions d'utilisation pour pouvoir vous inscrire");
     return 1;
 
   } else {
-    termsInput.parentElement.setAttribute('data-error-visible', 'false');
-    termsInput.parentElement.removeAttribute('data-error');
-
+    hideError(btnParent);
     return 0;
   }
 }
