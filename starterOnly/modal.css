@@ -41,6 +41,11 @@ img {
   float: left;
 }
 
+.logo {
+  width: auto;
+  height: auto;
+}
+
 .main-navbar {
   float: right;
 }
@@ -156,6 +161,7 @@ main {
 
 #modal-valid {
   display: none;
+  font-size: 16px;
 }
 
 .button {

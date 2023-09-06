@@ -173,10 +173,14 @@ function dateValidation(date, dateParent) {
 function isDateValid(inputDate) {
   const setDate = new Date(inputDate.value);
   const currentDate = new Date();
+  const minDate = new Date(currentDate);
+  minDate.setFullYear(minDate.getFullYear() - 100);
 
-  if (setDate > currentDate) {
+  if (setDate < minDate || setDate > currentDate) {
+    console.log(minDate);
     return false;
   } else {
+    console.log(minDate);
     return true;
   }
 };
@@ -235,7 +239,7 @@ function checkboxValidation(checkInput, checkInputParent) {
 function btnValidation(btn, btnParent) {
 
   if (!btn.checked) {
-    errorDisplay(btnParent, "Vous devez avoir lu et accepté les conditions d'utilisation pour pouvoir vous inscrire");
+    errorDisplay(btnParent, "Vous devez avoir lu et accepté les conditions d'utilisation.");
     return 1;
 
   } else {
