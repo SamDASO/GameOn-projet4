@@ -11,7 +11,7 @@ function editNav() {
 
 // General
 
-const modalbg = document.querySelector(".bground");
+const modalBg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const modalClose = document.querySelectorAll(".close");
 const modalValid = document.getElementById("modal-valid");
@@ -51,12 +51,12 @@ modalClose.forEach((close) => close.addEventListener("click", closeModal));
 
 // launch modal form
 function launchModal() {
-  modalbg.style.display = "block";
+  modalBg.style.display = "block";
 };
 
 // Close modal form
 function closeModal() {
-  modalbg.style.display = "none";
+  modalBg.style.display = "none";
 };
 
 //------------ FORM VALIDATION ------------//
@@ -68,7 +68,7 @@ function submitForm(event) {
 
   let isFormValid = 0;
 
-  isFormValid = lenghtInputValidation(firstInput, firstInputParent) + lenghtInputValidation(lastInput, lastInputParent) + emailValidation(emailInput, emailInputParent) + dateValidation(dateInput, dateInputParent) + numberValidation(competitionInput, competitionInputParent) + checkboxValidation(locationInput, locationInputParent) + btnValidation(termsInput, termsInputParent);
+  isFormValid = validateLengthInput(firstInput, firstInputParent) + validateLengthInput(lastInput, lastInputParent) + validateEmail(emailInput, emailInputParent) + validateDate(dateInput, dateInputParent) + validateNumber(competitionInput, competitionInputParent) + validateRadio(locationInput, locationInputParent) + validateCheckbox(termsInput, termsInputParent);
 
   if (isFormValid > 0) {
 
@@ -84,59 +84,57 @@ function submitForm(event) {
 
 //---- Errors display or hide ----//
 
-
-/**
- * This function display an error message for each input field of the form.
- * @param {string} displayEl - parent element of the input and where the message needs to be display
- * @param {string} errorMessage - The error message
- */
-function errorDisplay(displayEl, errorMessage) {
-  displayEl.setAttribute('data-error-visible', 'true');
-  displayEl.setAttribute('data-error', errorMessage);
+function displayError(displayElement, errorMessage) {
+  displayElement.setAttribute('data-error-visible', 'true');
+  displayElement.setAttribute('data-error', errorMessage);
 };
 
-/**
- * This function removes the error message applied after the errorDisplay() function.
- * @param {string} displayEl - parent element of the input and where the message needs to be display
- */
-function hideError(displayEl) {
-  displayEl.setAttribute('data-error-visible', 'false');
-  displayEl.removeAttribute('data-error');
+
+function hideError(displayElement) {
+  displayElement.setAttribute('data-error-visible', 'false');
+  displayElement.removeAttribute('data-error');
 };
+
 
 //---- Validation inputs ----//
 
+// --- Length --- //
 /**
  * checks if the input is longer than 2 caracters - used for a form
- * @param {string} name - Replace it with the DOM element which we need to verify the condition
- * @param {string} nameParent - Replace it with the DOM element which is the parent of the previous parameter
- * @returns 1 if the input is empty or smaller than 2 caracters, and 0 if it's longer than 2 caracters
+ * @param {string} input - The value whose length we want to check
  */
-function lenghtInputValidation(name, nameParent) {
+function isMinLength(input) {
+  return input.value.trim().length >= 2;
+};
 
-  if (name.value.trim().length < 2) {
-    errorDisplay(nameParent, "Ce champ doit contenir au moins 2 caractères");
+function validateLengthInput(input, inputParent) {
+
+  if (!isMinLength(input)) {
+    displayError(inputParent, "Ce champ doit contenir au moins 2 caractères");
     return 1;
 
   } else {
-    hideError(nameParent);
+    hideError(inputParent);
     return 0;
   }
-}
+};
 
+// --- Email --- //
 
 /**
  * checks if the email input is valid - used for a form
- * @param {string} email  - Replace it with the DOM element which we need to verify the condition. This needs to be an email input
- * @param {string} emailParent  - Replace it with the DOM element which is the parent of the previous parameter
- * @returns 1 if the email input is not correct and 0 if it's correct.
+ * @param {string} input - The email provided by the user, which is verified here
  */
-
-function emailValidation(email, emailParent) {
+function isRegexValid(input) {
   const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  return validRegex.test(input.value);
+}
 
-  if (!validRegex.test(email.value)) {
-    errorDisplay(emailParent, "L'e-mail entré n'est pas valide");
+
+function validateEmail(email, emailParent) {
+
+  if (!isRegexValid(email)) {
+    displayError(emailParent, "L'e-mail entré n'est pas valide");
     return 1;
 
   } else {
@@ -145,16 +143,25 @@ function emailValidation(email, emailParent) {
   }
 }
 
-/**
- * checks if the date input is valid and not empty - used for a form
- * @param {string} date - Replace it with the DOM element which we need to verify the condition.
- * @param {string} dateParent - Replace it with the DOM element which is the parent of the previous parameter
- * @returns 1 if it's not valid and 0 if everything is correct
- */
+// --- Date --- //
 
-function dateValidation(date, dateParent) {
+
+/**
+ * Function for inputs where the date cannot be superior of the current date of submitting
+ * @param {string} inputDate - The element input we want to compare
+ */
+function isDateValid(inputDate) {
+  const setDate = new Date(inputDate.value);
+  const currentDate = new Date();
+  const minDate = new Date(currentDate);
+  minDate.setFullYear(minDate.getFullYear() - 100);
+
+  return setDate > minDate && setDate < currentDate
+};
+
+function validateDate(date, dateParent) {
   if (!date.value || !Date.parse(date.value) || !isDateValid(date)) {
-    errorDisplay(dateParent, "Vous devez entrer votre date de naissance correctement");
+    displayError(dateParent, "Vous devez entrer votre date de naissance correctement");
     return 1;
 
   } else {
@@ -163,87 +170,75 @@ function dateValidation(date, dateParent) {
   }
 }
 
-//---- Function comparing current date to the input----//
+//--- Numbers ---//
 
 /**
- * Function for inputs where the date cannot be superior of the current date of submitting
- * @param {string} inputDate - The element wich we want to compare the value with the current date
- * @returns false if the input is superior of the current date or true if not
+ * checks if the input is a valid number
+ * @param {string} input - The number provided by the user, which is verified here
  */
-function isDateValid(inputDate) {
-  const setDate = new Date(inputDate.value);
-  const currentDate = new Date();
-  const minDate = new Date(currentDate);
-  minDate.setFullYear(minDate.getFullYear() - 100);
-
-  if (setDate < minDate || setDate > currentDate) {
-    console.log(minDate);
-    return false;
-  } else {
-    console.log(minDate);
-    return true;
-  }
+function isRegexNumberValid(input) {
+  //Verify if the pattern matches for a non-negative number and without exponent notation. Also verify if the input is a number.
+  const regex = /^[+]?\d+(\.\d+)?$/;
+  return regex.test(input.value);
 };
 
 
-/**
- * checks if the input is a valid number and is not empty. Valid number means it's not a negative or an exponent number - used for a form
- * @param {string} numberValid - Replace it with the DOM element which we need to verify the condition.
- * @param {string} numberValidParent - Replace it with the DOM element which is the parent of the previous parameter
- * @returns 1 if it's not a valid number and 0 if the number is correct.
- */
+function validateNumber(numberInput, numberInputParent) {
 
-function numberValidation(numberValid, numberValidParent) {
-  //Verify if the pattern matches for a non-negative number and without exponent notation. Also verify if the input is a number.
-  const regex = /^[+]?\d+(\.\d+)?$/;
-
-
-  if (!numberValid.value || !regex.test(numberValid.value)) {
-    errorDisplay(numberValidParent, "Ce champ est obligatoire et ne peut contenir que des chiffres");
+  if (!numberInput.value || !isRegexNumberValid(numberInput)) {
+    displayError(numberInputParent, "Ce champ est obligatoire et ne peut contenir que des chiffres");
     return 1;
 
   } else {
-    hideError(numberValidParent);
+    hideError(numberInputParent);
+    return 0;
+  }
+};
+
+// --- Radio --- //
+
+
+/**
+ * Used for required radio buttons. This function checks if one option is selected
+ * @param {string} radioInput - The name of the radios buttons
+ */
+function isRadioValid(radioInput) {
+  return Array.from(radioInput).some(input => input.checked);
+};
+
+
+function validateRadio(radioInput, radioInputParent) {
+
+  if (!isRadioValid(radioInput)) {
+    displayError(radioInputParent, "Vous devez choisir une des options ci-dessus");
+    return 1;
+
+  } else {
+    hideError(radioInputParent);
     return 0;
   }
 }
 
+//--- Checkbox ---//
+
+
 /**
- * Used for required checkbox. This function checks if one option is selected - Used for a the location checkbox of the form
- * @param {string} checkInput - The DOM ELEMENT reffering to the name of the radios buttons
- * @param {string} checkInputParent - The DOM ELEMENT reffering to the parent of the name of the radios buttons
- * @returns 0 if one option is selected and returns 1 if not.
+ * Verify if the checkbox is checked by the user
+ * @param {string} checkbox - The name of the checkbox button
  */
+function isCheckboxValid(checkbox) {
+  return checkbox.checked
+};
 
-function checkboxValidation(checkInput, checkInputParent) {
 
-  let isChecked = Array.from(checkInput).some(input => input.checked);
+function validateCheckbox(checkbox, checkboxParent) {
 
-  if (!isChecked) {
-    errorDisplay(checkInputParent, "Vous devez choisir une des options ci-dessus");
+  if (!isCheckboxValid(checkbox)) {
+    displayError(checkboxParent, "Vous devez avoir lu et accepté les conditions d'utilisation.");
     return 1;
 
   } else {
-    hideError(checkInputParent);
-    return 0;
-  }
-}
-
-/**
- * Verify in the form modal that the terms of use are checked before submitting the form.
- * @param {string} btn - The DOM ELEMENT reffering to the name of the checkbox button
- * @param {string} btnParent - The DOM ELEMENT reffering to the parent of the name of the checkbox button
- * @returns 0 if it's the case and 1 if not.
- */
-
-function btnValidation(btn, btnParent) {
-
-  if (!btn.checked) {
-    errorDisplay(btnParent, "Vous devez avoir lu et accepté les conditions d'utilisation.");
-    return 1;
-
-  } else {
-    hideError(btnParent);
+    hideError(checkboxParent);
     return 0;
   }
 }
