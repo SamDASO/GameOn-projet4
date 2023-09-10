@@ -1,3 +1,4 @@
+//------------ NAV FUNCTION ------------//
 function editNav() {
   const nav = document.getElementById("myTopnav");
   if (nav.className === "topnav") {
@@ -38,30 +39,35 @@ const submit = document.querySelectorAll(".btn-submit");
 //------------ ADD EVENT LISTENER ------------//
 
 // launch modal event
+
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
 
 // Submitting the form
+
 submit.forEach((btn) => btn.addEventListener("click", submitForm));
 
 // Close modal event
+
 modalClose.forEach((close) => close.addEventListener("click", closeModal));
 
 
 //------------ MODAL FUNCTIONS ------------//
 
 // launch modal form
+
 function launchModal() {
   modalBg.style.display = "block";
 };
 
 // Close modal form
+
 function closeModal() {
   modalBg.style.display = "none";
 };
 
 //------------ FORM VALIDATION ------------//
 
-// Submit function
+//---- Submit function ----//
 
 function submitForm(event) {
   event.preventDefault();
@@ -84,11 +90,14 @@ function submitForm(event) {
 
 //---- Errors display or hide ----//
 
+// Display
+
 function displayError(displayElement, errorMessage) {
   displayElement.setAttribute('data-error-visible', 'true');
   displayElement.setAttribute('data-error', errorMessage);
 };
 
+// Hide
 
 function hideError(displayElement) {
   displayElement.setAttribute('data-error-visible', 'false');
@@ -98,7 +107,8 @@ function hideError(displayElement) {
 
 //---- Validation inputs ----//
 
-// --- Length --- //
+// Length
+
 /**
  * checks if the input is longer than 2 caracters - used for a form
  * @param {string} input - The value whose length we want to check
@@ -106,6 +116,8 @@ function hideError(displayElement) {
 function isMinLength(input) {
   return input.value.trim().length >= 2;
 };
+
+//-- Validation function with errors
 
 function validateLengthInput(input, inputParent) {
 
@@ -119,7 +131,8 @@ function validateLengthInput(input, inputParent) {
   }
 };
 
-// --- Email --- //
+
+// Email
 
 /**
  * checks if the email input is valid - used for a form
@@ -130,6 +143,7 @@ function isRegexValid(input) {
   return validRegex.test(input.value);
 }
 
+//-- Validation function with errors
 
 function validateEmail(email, emailParent) {
 
@@ -143,7 +157,7 @@ function validateEmail(email, emailParent) {
   }
 }
 
-// --- Date --- //
+// Date
 
 
 /**
@@ -159,6 +173,8 @@ function isDateValid(inputDate) {
   return setDate > minDate && setDate < currentDate
 };
 
+//-- Validation function with errors
+
 function validateDate(date, dateParent) {
   if (!date.value || !Date.parse(date.value) || !isDateValid(date)) {
     displayError(dateParent, "Vous devez entrer votre date de naissance correctement");
@@ -170,7 +186,7 @@ function validateDate(date, dateParent) {
   }
 }
 
-//--- Numbers ---//
+//Numbers
 
 /**
  * checks if the input is a valid number
@@ -182,6 +198,7 @@ function isRegexNumberValid(input) {
   return regex.test(input.value);
 };
 
+//-- Validation function with errors
 
 function validateNumber(numberInput, numberInputParent) {
 
@@ -195,7 +212,7 @@ function validateNumber(numberInput, numberInputParent) {
   }
 };
 
-// --- Radio --- //
+// Radio
 
 
 /**
@@ -206,6 +223,7 @@ function isRadioValid(radioInput) {
   return Array.from(radioInput).some(input => input.checked);
 };
 
+//-- Validation function with errors
 
 function validateRadio(radioInput, radioInputParent) {
 
@@ -219,7 +237,7 @@ function validateRadio(radioInput, radioInputParent) {
   }
 }
 
-//--- Checkbox ---//
+//Checkbox
 
 
 /**
@@ -230,6 +248,7 @@ function isCheckboxValid(checkbox) {
   return checkbox.checked
 };
 
+//-- Validation function with errors
 
 function validateCheckbox(checkbox, checkboxParent) {
 
@@ -241,6 +260,6 @@ function validateCheckbox(checkbox, checkboxParent) {
     hideError(checkboxParent);
     return 0;
   }
-}
+};
 
 
