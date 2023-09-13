@@ -159,11 +159,6 @@ main {
 
 /* Modal form */
 
-#modal-valid {
-  display: none;
-  font-size: 16px;
-}
-
 .button {
   background: #fe142f;
   margin-top: 0.5em;
@@ -197,7 +192,7 @@ main {
 .content {
   margin: 5% auto;
   width: 100%;
-  max-width: 500px;
+  max-width: 450px;
   animation-name: modalopen;
   animation-duration: var(--modal-duration);
   background: #232323;
@@ -520,6 +515,27 @@ input[data-error]::after {
   height: 100%;
   display: block;
   padding: 0;
+}
+
+#modal-valid {
+  display: none;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 50%;
+  align-items: center;
+  height: 100vh;
+  margin-top: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#close-valid {
+  display: none;
+  justify-content: center;
+  border: none;
+  border-radius: 7px;
+  font-size: 1rem;
+  padding: 12px 52px;
 }
 
 .copyrights {

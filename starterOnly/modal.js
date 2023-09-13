@@ -15,6 +15,7 @@ function editNav() {
 const modalBg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const modalClose = document.querySelectorAll(".close");
+const modalCloseBtn = document.getElementById("close-valid");
 const modalValid = document.getElementById("modal-valid");
 const form = document.getElementById("form-inscription");
 
@@ -50,6 +51,8 @@ submit.forEach((btn) => btn.addEventListener("click", submitForm));
 
 modalClose.forEach((close) => close.addEventListener("click", closeModal));
 
+modalCloseBtn.addEventListener("click", closeModal);
+
 
 //------------ MODAL FUNCTIONS ------------//
 
@@ -82,8 +85,8 @@ function submitForm(event) {
 
   } else {
     form.style.display = "none";
-    modalValid.style.display = "block";
-    modalClose.forEach((close) => close.addEventListener("click", closeModal));
+    modalValid.style.display = "flex";
+    modalCloseBtn.style.display = "flex";
     return true;
   }
 }
